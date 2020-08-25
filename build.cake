@@ -142,7 +142,7 @@ Task("Publish-NuGet-Package")
 Task("Publish-GitHub-Package")
 .IsDependentOn("NuGet")
 .WithCriteria(() => HasEnvironmentVariable("GITHUB_REF"))
-.WithCriteria(() => EnvironmentVariable("GITHUB_REF").StartsWith("refs/tags/v") || EnvironmentVariable("GITHUB_REF") == "refs/heads/develop")
+.WithCriteria(() => EnvironmentVariable("GITHUB_REF").StartsWith("refs/tags/v"))
 .Does(() => {
     // Publish to GitHub Packages
     var exitCode = 0;
