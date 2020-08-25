@@ -21,6 +21,10 @@ jobs:
     - uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '3.1.101'
+    - name: Restore Tools
+      shell: bash
+      run: |
+          dotnet tool restore
     - name: Run the Cake script
       uses: cake-build/cake-action@v1
       with:
@@ -29,6 +33,7 @@ jobs:
         # verbosity: Diagnostic
       env:
         NUGET_TOKEN: ${{secrets.NUGET_TOKEN}}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - uses: actions/upload-artifact@v1
       name: Upload Artifacts
       with:
