@@ -43,18 +43,18 @@ namespace Spectre.Console.Extensions.Logging
                     ? GetLevelMarkup(logLevel)
                     : string.Empty.PadRight(6);
                 var categoryStr = _config.IncludeEventId
-                    ? _name + $"[grey][[{eventId.Id}]][/]"
+                    ? _name + $"[grey][[{eventId.Id}][/]"
                     : _name;
                 _console.MarkupLine(prefix + categoryStr);
-                _console.MarkupLine(formatter(state, exception).PadLeft(6));
+                _console.MarkupLine(formatter(state, exception).PadLeft(6, '⠀'));
             }
         }
         private string GetLevelMarkup(LogLevel level) {
             return level switch
             {
-                LogLevel.Trace => "[italic dim]trce[/]: ",
-                LogLevel.Debug => "[italic dim]dbug[/]: ",
-                LogLevel.Information => "[dim]info[/]: ",
+                LogLevel.Trace => "[italic dim grey]trce[/]: ",
+                LogLevel.Debug => "[dim grey]dbug[/]: ",
+                LogLevel.Information => "[dim dodgerblue1]info[/]: ",
                 LogLevel.Warning => "[bold orange3]warn[/]: ",
                 LogLevel.Error => "[bold red]fail[/]: ",
                 LogLevel.Critical => "[bold red underline]crit[/]: ",
