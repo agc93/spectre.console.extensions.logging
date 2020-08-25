@@ -1,0 +1,46 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: CI Build
+
+on:
+  push:
+    branches: [ develop, master ]
+    tags:
+      - 'v*.*.*'
+  pull_request:
+    branches: [ develop ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+      with:
+        fetch-depth: 0
+    - uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '3.1.101'
+    - name: Run the Cake script
+      uses: cake-build/cake-action@v1
+      with:
+        target: Release
+        cake-bootstrap: true
+        # verbosity: Diagnostic
+      env:
+        NUGET_TOKEN: ${{secrets.NUGET_TOKEN}}
+    - uses: actions/upload-artifact@v1
+      name: Upload Artifacts
+      with:
+        name: scel-package
+        path: dist/package/
+    - name: Create Release
+      if: startsWith(github.ref, 'refs/tags/')
+      uses: softprops/action-gh-release@v1
+      with:
+        body: |
+          Install the package from NuGet or download the `nupkg` directly below.
+        files: |
+          ./dist/package/*.nupkg
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
