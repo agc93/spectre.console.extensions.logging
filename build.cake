@@ -2,6 +2,9 @@
 #load "build/version.cake"
 #tool "nuget:https://api.nuget.org/v3/index.json?package=nuget.commandline&version=5.3.1"
 
+#module nuget:?package=Cake.DotNetTool.Module&version=0.4.0
+#tool dotnet:?package=gpr&version=0.1.233
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // ARGUMENTS
@@ -136,8 +139,36 @@ Task("Publish-NuGet-Package")
     });
 });
 
+Task("Publish-GitHub-Package")
+.IsDependentOn("NuGet")
+.WithCriteria(() => HasEnvironmentVariable("GITHUB_REF"))
+.WithCriteria(() => EnvironmentVariable("GITHUB_REF").StartsWith("refs/tags/v") || EnvironmentVariable("GITHUB_REF") == "refs/heads/develop")
+.Does(() => {
+    // Publish to GitHub Packages
+    var exitCode = 0;
+    var pkgFiles = GetFiles($"{artifacts}package/*.nupkg");
+    foreach(var file in pkgFiles) 
+    {
+        Information("Publishing {0}...", file.GetFilename().FullPath);
+        exitCode += StartProcess("dotnet", 
+            new ProcessSettings {
+                Arguments = new ProcessArgumentBuilder()
+                    .Append("gpr")
+                    .Append("push")
+                    .AppendQuoted(file.FullPath)
+                    .AppendSwitchSecret("-k", " ", EnvironmentVariable("GITHUB_TOKEN"))
+            }
+        );
+    }
+    if(exitCode != 0) 
+    {
+        throw new CakeException("Could not push GitHub packages.");
+    }
+});
+
 Task("Release")
 .IsDependentOn("Default")
+.IsDependentOn("Publish-GitHub-Package")
 .IsDependentOn("Publish-NuGet-Package");
 
 Task("Default")
