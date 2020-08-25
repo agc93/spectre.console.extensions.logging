@@ -14,7 +14,7 @@ var configuration = Argument("configuration", "Release");
 // GLOBAL VARIABLES
 ///////////////////////////////////////////////////////////////////////////////
 
-var projects = GetProjects(File("./src/Spectre.Console.Extensions.Logging.sln"), configuration);
+var projects = GetProjects(File("./src/Spectre.Logging.sln"), configuration);
 var artifacts = "./dist/";
 var frameworks = new List<string> { "netstandard2.0" };
 var packageVersion = string.Empty;
