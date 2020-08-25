@@ -54,7 +54,7 @@ namespace Spectre.Console.Extensions.Logging
                 return string.Empty.PadRight(7);
             }
             var eventId = string.Format("{0,4:####}", evId.Id);
-            return $"[dim grey]({eventId})[/] ";
+            return $"[dim grey][[{eventId}][/] ";
         }
 
         private string GetLevelMarkup(LogLevel level) {
@@ -63,8 +63,8 @@ namespace Spectre.Console.Extensions.Logging
                 LogLevel.Error => "[bold red]|ERROR|:[/] ",
                 LogLevel.Warning => "[bold orange3]| WARN|:[/] ",
                 LogLevel.Information => "[bold dim]| INFO|:[/] ",
-                LogLevel.Debug => "[dim italic]|DEBUG|:[/] ",
-                LogLevel.Trace => "[dim italic grey]|TRACE|:[/] ",
+                LogLevel.Debug => "[dim]|DEBUG|:[/] ",
+                LogLevel.Trace => "[dim grey]|TRACE|:[/] ",
                 _ => "| UNKN|: "
             };
         }

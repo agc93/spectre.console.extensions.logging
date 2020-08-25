@@ -7,6 +7,12 @@
       "commands": [
         "dotnet-cake"
       ]
+    },
+    "gpr": {
+      "version": "0.1.224",
+      "commands": [
+        "gpr"
+      ]
     }
   }
 }
