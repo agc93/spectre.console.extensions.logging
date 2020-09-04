@@ -41,7 +41,7 @@ namespace Spectre.Console.Extensions.Logging
                 var prefix = _config.IncludePrefix
                     ? GetLevelMarkup(logLevel)
                     : string.Empty;
-                var eventIdStr = _config.IncludeEventId || logLevel == LogLevel.Trace
+                var eventIdStr = _config.IncludeEventId
                     ? GetEventIdMarkup(eventId) + " "
                     : string.Empty;
 
@@ -59,7 +59,7 @@ namespace Spectre.Console.Extensions.Logging
 
         private string GetLevelMarkup(LogLevel level) {
             return level switch {
-                LogLevel.Critical => "[bold red underline]| CRIT|:[/] ",
+                LogLevel.Critical => "[bold underline white on red]| CRIT|:[/] ",
                 LogLevel.Error => "[bold red]|ERROR|:[/] ",
                 LogLevel.Warning => "[bold orange3]| WARN|:[/] ",
                 LogLevel.Information => "[bold dim]| INFO|:[/] ",
