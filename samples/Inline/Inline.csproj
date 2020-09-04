@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Spectre.Console.Extensions.Logging\Spectre.Console.Extensions.Logging.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Description>Demonstrates the terser output of the [italic black on white]SpectreInlineLogger[/].</Description>
+  </PropertyGroup>
+
+</Project>
