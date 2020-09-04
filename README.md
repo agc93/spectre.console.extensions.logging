@@ -40,3 +40,35 @@ There's also an alternative logger implementation that sacrifices some detail fo
 ### Configuration
 
 There's also some configuration options available from the `SpectreConsoleLoggerConfiguration` class. You can optionally pass an instance of the configuration, or a configuration action, in the call to `AddSpectreConsole()`.
+
+## Examples
+
+To see Spectre.Console in action, install the [dotnet-example](https://github.com/patriksvensson/dotnet-example) global tool.
+
+```
+> dotnet tool install -g dotnet-example
+```
+
+Now you can list available examples in this repository:
+
+```
+> dotnet example
+
+┌─────────┬────────────────────────────────┬──────────────────────────────────────────────────────────────┐
+│ Name    │ Path                           │ Description                                                  │
+├─────────┼────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ Default │ samples/Default/Default.csproj │ Demonstrates the default output of the SpectreConsoleLogger. │
+│ Inline  │ samples/Inline/Inline.csproj   │ Demonstrates the terser output of the SpectreInlineLogger.   │
+└─────────┴────────────────────────────────┴──────────────────────────────────────────────────────────────┘
+```
+
+And to run an example:
+
+```
+> dotnet example default
+info: SampleCategory[0]
+      Sample application starting up...
+trce: SampleCategory[1234]
+      Use a familiar format for logging messages
+...
+```
