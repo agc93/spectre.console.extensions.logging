@@ -5,11 +5,11 @@ name: CI Build
 
 on:
   push:
-    branches: [ develop, master ]
+    branches: [ main ]
     tags:
       - 'v*.*.*'
   pull_request:
-    branches: [ develop ]
+    branches: [ main ]
 
 jobs:
   build:
