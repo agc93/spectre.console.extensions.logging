@@ -16,7 +16,7 @@ Or if you're using dependency injection:
 
 ```csharp
 //in your startup code
-services.AddLogging(builder => build.AddSpectreConsole());
+services.AddLogging(builder => builder.AddSpectreConsole());
 
 //in your classes
 public MyClass(ILogger<MyClass> logger) {
