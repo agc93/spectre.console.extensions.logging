@@ -1,64 +1,67 @@
 using System;
+using System.Text;
 using Microsoft.Extensions.Logging;
 
 namespace Spectre.Console.Extensions.Logging
 {
-    public class SpectreConsoleLogger : ILogger
+    public class SpectreConsoleLogger : BaseSpectreLogger
     {
         /* 
         / Because of the context this implementation originated in (a CLI tool)
         / this logger doesn't actually *use* the category name anywhere.
         */
-        private readonly string _name;
-        private readonly SpectreConsoleLoggerConfiguration _config;
-        private readonly IAnsiConsole _console;
+        public SpectreConsoleLogger(string name, SpectreConsoleLoggerConfiguration config) : base(name, config) { }
+        
+        protected override string RenderLogMessage<TState>(LogLevel logLevel, EventId eventId, TState state,
+            Exception exception, Func<TState, Exception, string> formatter)
+        {
+            var formattedLine = formatter(state, exception);
 
-        public SpectreConsoleLogger(string name, SpectreConsoleLoggerConfiguration config) {
-            _name = name;
-            _config = config;
+            var sb = new StringBuilder();
 
-            var settings = config.ConsoleSettings ?? new AnsiConsoleSettings {
-                Ansi = AnsiSupport.Detect,
-                ColorSystem = ColorSystemSupport.Detect
-            };
-            _console = AnsiConsole.Create(settings);
-            if (config.ConsoleConfiguration != null) {
-                config.ConsoleConfiguration.Invoke(_console);
+            if (Config.IncludePrefix)
+            {
+                var prefix = GetLevelMarkup(logLevel);
+
+                sb.Append(prefix);
             }
-        }
-        public IDisposable BeginScope<TState>(TState state) {
-            return null;
+
+            sb.Append(Name);
+
+            if (Config.IncludeEventId)
+            {
+                sb.Append("[grey][[");
+                sb.Append(eventId.Id);
+                sb.Append("]][/]");
+            }
+
+            sb.AppendLine();
+
+            sb.Append("      ");
+            sb.Append(formattedLine);
+
+            return sb.ToString();
         }
 
-        public bool IsEnabled(LogLevel logLevel) {
-            return logLevel >= _config.LogLevel;
-        }
+        private const string Unknown = "[italic dim grey]unkn[/]: ";
+        private const string Trace = "[italic dim grey]trce[/]: ";
+        private const string Debug = "[dim grey]dbug[/]: ";
+        private const string Information = "[dim deepskyblue2]info[/]: ";
+        private const string Warning = "[bold orange3]warn[/]: ";
+        private const string Error = "[bold red]fail[/]: ";
+        private const string Critical = "[bold underline red on white]crit[/]: ";
 
-        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter) {
-            if (!IsEnabled(logLevel)) {
-                return;
-            }
-            if (_config.EventId == 0 || _config.EventId == eventId.Id) {
-                var prefix = _config.IncludePrefix
-                    ? GetLevelMarkup(logLevel)
-                    : string.Empty;
-                var categoryStr = _config.IncludeEventId
-                    ? _name + $"[grey][[{eventId.Id}]][/]"
-                    : _name;
-                _console.MarkupLine(prefix + categoryStr);
-                _console.MarkupLine(string.Empty.PadRight(6) + formatter(state, exception));
-            }
-        }
-        private string GetLevelMarkup(LogLevel level) {
+        private static string GetLevelMarkup(LogLevel level)
+        {
             return level switch
             {
-                LogLevel.Trace => "[italic dim grey]trce[/]: ",
-                LogLevel.Debug => "[dim grey]dbug[/]: ",
-                LogLevel.Information => "[dim deepskyblue2]info[/]: ",
-                LogLevel.Warning => "[bold orange3]warn[/]: ",
-                LogLevel.Error => "[bold red]fail[/]: ",
-                LogLevel.Critical => "[bold underline red on white]crit[/]: ",
-                _ => throw new ArgumentOutOfRangeException(nameof(level))
+                LogLevel.Trace => Trace,
+                LogLevel.Debug => Debug,
+                LogLevel.Information => Information,
+                LogLevel.Warning => Warning,
+                LogLevel.Error => Error,
+                LogLevel.Critical => Critical,
+                _ => Unknown
             };
         }
     }
