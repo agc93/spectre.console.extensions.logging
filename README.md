@@ -1,4 +1,4 @@
-# Spectre.Cli.Extensions.DependencyInjection
+# Spectre.Console.Extensions.Logging
 
 A highly opioninated logger implementation for [`Microsoft.Extensions.Logging`](https://www.nuget.org/packages/Microsoft.Extensions.Logging/) that uses [`Spectre.Console`](https://github.com/spectresystems/spectre.console) to write to the console.
 
