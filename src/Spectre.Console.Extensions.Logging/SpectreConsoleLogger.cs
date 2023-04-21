@@ -45,8 +45,16 @@ namespace Spectre.Console.Extensions.Logging
                 var categoryStr = _config.IncludeEventId
                     ? _name + $"[grey][[{eventId.Id}]][/]"
                     : _name;
-                _console.MarkupLine(prefix + categoryStr);
-                _console.MarkupLine(string.Empty.PadRight(6) + formatter(state, exception));
+
+                if (!_config.SingleLine)
+                {
+                    _console.MarkupLine(prefix + categoryStr);
+                    _console.MarkupLine(string.Empty.PadRight(6) + formatter(state, exception));
+                }
+                else
+                {
+                    _console.MarkupLine(prefix + categoryStr + " " + formatter(state, exception));
+                }
             }
         }
         private string GetLevelMarkup(LogLevel level) {
