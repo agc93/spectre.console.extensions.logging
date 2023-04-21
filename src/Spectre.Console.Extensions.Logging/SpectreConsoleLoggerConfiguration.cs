@@ -11,5 +11,6 @@ namespace Spectre.Console.Extensions.Logging
         public AnsiConsoleSettings ConsoleSettings {get;set;} = null;
         public bool IncludePrefix {get;set;} = true;
         public bool IncludeEventId {get;set;} = false;
+        public bool SingleLine { get; set; } = false;
     }
 }
